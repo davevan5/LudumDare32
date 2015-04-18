@@ -25,7 +25,7 @@ namespace LudumDare32
         public LudumDare32Game()
         {
             // Target 9.1 profile by default
-            GraphicsDeviceManager.PreferredGraphicsProfile = new[] {GraphicsProfile.Level_9_1};
+            GraphicsDeviceManager.PreferredGraphicsProfile = new[] { GraphicsProfile.Level_9_1 };
             ConsoleLogMode = ConsoleLogMode.Always;
         }
 
@@ -36,7 +36,7 @@ namespace LudumDare32
             // For now lets set our virtual resolution the same as the actual resolution
             // But we may want to hard code this to some value
             VirtualResolution = new Vector3(GraphicsDeviceManager.PreferredBackBufferWidth, GraphicsDeviceManager.PreferredBackBufferHeight, 20f);
-            
+
             // Create our camera, cause yay :D
             cameraEntity = new Entity("Camera") { 
                 new CameraComponent() { UseProjectionMatrix = true, ProjectionMatrix = SpriteBatch.CalculateDefaultProjection(VirtualResolution) }
@@ -46,7 +46,7 @@ namespace LudumDare32
             var playerEntity = new Entity() {
                 new SpriteComponent() { SpriteGroup = Asset.Load<SpriteGroup>("Temp"), CurrentFrame = 0 },
                 new TransformationComponent() { Translation = new Vector3(100, 100, 0) }
-            };            
+            };
             // Make it so the engine knows about it
             Entities.Add(playerEntity);
             // A wrapper class for the entity that actual handles our stuff,
@@ -55,12 +55,18 @@ namespace LudumDare32
             player = new Player(playerEntity, Input);
 
             // Create our level
-            var platforms = Asset.Load<SpriteGroup>("Platforms");
-            level = new Level();
-            for (var i = 0; i < 10; i++)
+            var platforms = Asset.Load<SpriteGroup>("TileSetTest");
+            level = new Level(new Size2(20, 11));
+
+            for (int x = 0; x < 20; x++)
             {
-                level.Items.Add(new LevelItem(platforms.Images[0], new Vector2(80 + (i * 64), 500)));
+                level.SetTile(x, 0, new Tile() { Sprite = platforms[0] });
+                level.SetTile(x, 10, new Tile() { Sprite = platforms[0] });
             }
+
+            level.SetTile(19, 9, new Tile() { Sprite = platforms[0] });
+
+            level.BuildTileData();
 
             // Set up the rendering pipeline
             CreatePipeline();
@@ -85,14 +91,14 @@ namespace LudumDare32
         {
             var levelRenderer = new DelegateRenderer(Services) { Render = RenderLevel };
 
-            
+
             // Setup the default rendering pipeline
             RenderSystem.Pipeline.Renderers.Add(new CameraSetter(Services) { Camera = cameraEntity.Get<CameraComponent>() });
-            RenderSystem.Pipeline.Renderers.Add(new RenderTargetSetter(Services) {ClearColor = Color.CornflowerBlue});
+            RenderSystem.Pipeline.Renderers.Add(new RenderTargetSetter(Services) { ClearColor = Color.CornflowerBlue });
             RenderSystem.Pipeline.Renderers.Add(levelRenderer);
             RenderSystem.Pipeline.Renderers.Add(new SpriteRenderer(Services));
             RenderSystem.Pipeline.Renderers.Add(new UIRenderer(Services));
-            
+
         }
 
         private async Task UpdateLoop()
@@ -102,10 +108,8 @@ namespace LudumDare32
                 // Wait next rendering frame
                 await Script.NextFrame();
                 player.Update((float)UpdateTime.Elapsed.TotalSeconds);
-                 
-                var result = level.CheckCollision(player.GetCollider());
-                if (result.Collided)
-                    player.OnCollision(result);
+
+                level.CheckCollision(player);
             }
         }
     }

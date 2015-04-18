@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LudumDare32", "LudumDare32", "{9B454815-C968-4981-91F4-CDAAE07FD648}"
 	ProjectSection(SiliconStudioPackage) = preProject
@@ -88,6 +88,9 @@ Global
 		{BEF4CA52-6044-47D9-99F7-35E9589D87C5}.Testing|Mixed Platforms.Build.0 = Testing|Any CPU
 		{BEF4CA52-6044-47D9-99F7-35E9589D87C5}.Testing|Windows.ActiveCfg = Testing|Any CPU
 		{BEF4CA52-6044-47D9-99F7-35E9589D87C5}.Testing|Windows.Build.0 = Testing|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{597F2543-FAA6-428D-AEFE-B6A32BE6B176} = {9B454815-C968-4981-91F4-CDAAE07FD648}
