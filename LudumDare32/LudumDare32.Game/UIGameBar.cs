@@ -41,7 +41,7 @@ namespace LudumDare32
 
         public void LoadContent(Vector3 barPosition)
         {
-            var barOutlineTexture = Asset.Load<Texture>("bar_outline");
+            var barOutlineTexture = Asset.Load<Texture>("BarContainer");
             barOutline = new ImageElement
             {
                 Source = new UIImage(barOutlineTexture),
@@ -58,6 +58,7 @@ namespace LudumDare32
                 Width = barFillTexture.Width,
                 Height = barFillTexture.Height
             };
+
             barFillMaxWidth = barFillTexture.Width;
             barFill.SetCanvasRelativePosition(Vector3.Add(barPosition, new Vector3(0.003f, 0.004f, 0f)));
 

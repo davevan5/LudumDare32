@@ -1,7 +1,7 @@
 !Texture
 Id: a0971c1e-8c43-4305-9b87-cc9d2f1b47f1
 Tags: []
-Source: ../../RawAssets/health.png
+Source: ../../../RawAssets/health.png
 Width: 192
 Height: 21
 IsSizeInPercentage: false
