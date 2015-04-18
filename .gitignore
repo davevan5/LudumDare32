@@ -1,4 +1,6 @@
-/bin
-/obj
+bin/
+Bin/
+obj/
+Obj/
 *.suo
 *.user

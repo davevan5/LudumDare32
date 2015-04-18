@@ -1,4 +1,4 @@
-using SiliconStudio.Paradox.Effects.Data;
+﻿using SiliconStudio.Paradox.Effects.Data;
 
 namespace LudumDare32.Effects
 {
