@@ -16,6 +16,8 @@ namespace LudumDare32
 
         private ImageElement barFill;
 
+        private float barFillMaxWidth;
+
         private readonly string barTextureName;
 
         public UIGameBar(IServiceRegistry registry, Canvas gameCanvas, string barTextureName)
@@ -25,7 +27,19 @@ namespace LudumDare32
             this.barTextureName = barTextureName;
         }
 
-        public void LoadContent()
+        /// <summary>
+        /// Set the percentage fill of this bar, value between 0-1.0f
+        /// </summary>
+        /// <param name="percent"></param>
+        public void SetPercentFill(float percent)
+        {
+            if (percent < 0 || percent > 1)
+                return;
+
+            barFill.Width = barFillMaxWidth * percent;
+        }
+
+        public void LoadContent(Vector3 barPosition)
         {
             var barOutlineTexture = Asset.Load<Texture>("bar_outline");
             barOutline = new ImageElement
@@ -34,16 +48,18 @@ namespace LudumDare32
                 Width = barOutlineTexture.Width,
                 Height = barOutlineTexture.Height
             };
-            barOutline.SetCanvasRelativePosition(new Vector3(0.1f, 0.9f, 1f));
+            barOutline.SetCanvasRelativePosition(barPosition);
 
             var barFillTexture = Asset.Load<Texture>(barTextureName);
             barFill = new ImageElement
             {
                 Source = new UIImage(barFillTexture),
+                StretchType = StretchType.Fill,
                 Width = barFillTexture.Width,
                 Height = barFillTexture.Height
             };
-            barFill.SetCanvasRelativePosition(new Vector3(0.1f, 0.9f, 1f));
+            barFillMaxWidth = barFillTexture.Width;
+            barFill.SetCanvasRelativePosition(Vector3.Add(barPosition, new Vector3(0.003f, 0.004f, 0f)));
 
             gameCanvas.Children.Add(barOutline);
             gameCanvas.Children.Add(barFill);

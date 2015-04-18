@@ -1,31 +1,36 @@
 using SiliconStudio.Core;
 using SiliconStudio.Core.Mathematics;
 using SiliconStudio.Paradox;
-using SiliconStudio.Paradox.UI;
-using SiliconStudio.Paradox.UI.Controls;
 using SiliconStudio.Paradox.UI.Panels;
 
 namespace LudumDare32
 {
     public class UiGameHud : ScriptContext
     {
-        private ImageElement healthBar;
+        private Canvas hudCanvas;
+        private UIGameBar healthBar;
+        private UIGameBar staminaBar;
 
         public UiGameHud(IServiceRegistry registry)
             : base(registry)
         {
+            hudCanvas = new Canvas();
         }
-
-        private Canvas hudCanvas;
 
         public void LoadContent()
         {
-            healthBar = new ImageElement();
-            healthBar.SetCanvasAbsolutePosition(new Vector3(0.1f, 0.1f, 0.1f));
-            healthBar.BackgroundColor = Color.DarkRed;
+            healthBar = new UIGameBar(Services, hudCanvas, "health");
+            healthBar.LoadContent(new Vector3(0.05f, 0.9f, 1f));
 
-            hudCanvas = new Canvas();
-            hudCanvas.Children.Add(healthBar);
+            staminaBar = new UIGameBar(Services, hudCanvas, "stamina");
+            staminaBar.LoadContent(new Vector3(0.8f, 0.9f, 1f));
+
+            UI.RootElement = hudCanvas;
+        }
+
+        public void Update(float time)
+        {
+            staminaBar.SetPercentFill(1f - (time / 10));
         }
     }
 }

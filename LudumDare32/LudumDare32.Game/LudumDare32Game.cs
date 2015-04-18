@@ -4,23 +4,17 @@ using SiliconStudio.Core.Mathematics;
 using SiliconStudio.Paradox;
 using SiliconStudio.Paradox.Effects;
 using SiliconStudio.Paradox.Graphics;
-using SiliconStudio.Paradox.UI.Panels;
 using SiliconStudio.Paradox.EntityModel;
-using SiliconStudio.Core;
 using SiliconStudio.Paradox.Engine;
-using System.Collections.Generic;
-using System;
-using System.Diagnostics;
-using SiliconStudio.Paradox.Input;
 
 namespace LudumDare32
 {
     public class LudumDare32Game : Game
     {
-        private Canvas gameHud;
         private Entity cameraEntity;
         private Level level;
         private Player player;
+        private UiGameHud gameHud;
 
         public LudumDare32Game()
         {
@@ -65,10 +59,8 @@ namespace LudumDare32
             // Set up the rendering pipeline
             CreatePipeline();
 
-            gameHud = new Canvas();
-            var healthBar = new UIGameBar(Services, gameHud, "health");
-            healthBar.LoadContent();
-            UI.RootElement = gameHud;
+            gameHud = new UiGameHud(Services);
+            gameHud.LoadContent();
             // Kick off our update loop
             Script.Add(UpdateLoop);
         }
@@ -84,7 +76,6 @@ namespace LudumDare32
         private void CreatePipeline()
         {
             var levelRenderer = new DelegateRenderer(Services) { Render = RenderLevel };
-
             
             // Setup the default rendering pipeline
             RenderSystem.Pipeline.Renderers.Add(new CameraSetter(Services) { Camera = cameraEntity.Get<CameraComponent>() });
@@ -92,7 +83,6 @@ namespace LudumDare32
             RenderSystem.Pipeline.Renderers.Add(levelRenderer);
             RenderSystem.Pipeline.Renderers.Add(new SpriteRenderer(Services));
             RenderSystem.Pipeline.Renderers.Add(new UIRenderer(Services));
-            
         }
 
         private async Task UpdateLoop()
@@ -102,10 +92,12 @@ namespace LudumDare32
                 // Wait next rendering frame
                 await Script.NextFrame();
                 player.Update((float)UpdateTime.Elapsed.TotalSeconds);
-                 
+
                 var result = level.CheckCollision(player.GetCollider());
                 if (result.Collided)
                     player.OnCollision(result);
+
+                gameHud.Update((float)PlayTime.TotalTime.TotalSeconds);
             }
         }
     }
