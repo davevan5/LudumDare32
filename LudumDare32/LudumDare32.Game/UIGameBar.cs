@@ -14,12 +14,15 @@ namespace LudumDare32
 
         private ImageElement barOutline;
 
-        private ImageElement barElement;
+        private ImageElement barFill;
+
+        private readonly string barTextureName;
 
         public UIGameBar(IServiceRegistry registry, Canvas gameCanvas, string barTextureName)
             : base(registry)
         {
             this.gameCanvas = gameCanvas;
+            this.barTextureName = barTextureName;
         }
 
         public void LoadContent()
@@ -31,9 +34,19 @@ namespace LudumDare32
                 Width = barOutlineTexture.Width,
                 Height = barOutlineTexture.Height
             };
-            barOutline.SetCanvasRelativePosition(new Vector3(0.1f, 0.5f, 1f));
+            barOutline.SetCanvasRelativePosition(new Vector3(0.1f, 0.9f, 1f));
+
+            var barFillTexture = Asset.Load<Texture>(barTextureName);
+            barFill = new ImageElement
+            {
+                Source = new UIImage(barFillTexture),
+                Width = barFillTexture.Width,
+                Height = barFillTexture.Height
+            };
+            barFill.SetCanvasRelativePosition(new Vector3(0.1f, 0.9f, 1f));
 
             gameCanvas.Children.Add(barOutline);
+            gameCanvas.Children.Add(barFill);
         }
     }
 }
