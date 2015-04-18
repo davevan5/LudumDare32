@@ -1,0 +1,46 @@
+!Package
+Id: 9b454815-c968-4981-91f4-cdaae07fd648
+Tags: []
+Meta:
+    Name: LudumDare32
+    Version: 1.0.0.0
+    Authors: []
+    Owners: []
+    RootNamespace: LudumDare32
+    Dependencies:
+        -   Name: Paradox
+            Version: 1.0.0-beta10
+LocalDependencies: []
+Profiles:
+    -   Name: Shared
+        Platform: Shared
+        InheritProfiles: []
+        AssetFolders:
+            -   Path: Assets/Shared
+                RawImports: []
+            -   Path: LudumDare32.Game/Effects
+                RawImports: []
+        OutputGroupDirectories: {}
+        Properties:
+            Paradox.DisplayOrientation: !DisplayOrientation LandscapeLeft
+        ProjectReferences:
+            -   Id: bef4ca52-6044-47d9-99f7-35e9589d87c5
+                Location: LudumDare32.Game/LudumDare32.Game.csproj
+                Type: Library
+    -   Name: Windows
+        Platform: Windows
+        InheritProfiles: []
+        AssetFolders:
+            -   Path: Assets/Windows
+                RawImports: []
+        OutputGroupDirectories: {}
+        Properties:
+            Paradox.GraphicsPlatform: !GraphicsPlatform Direct3D11
+            Paradox.GraphicsProfile: !GraphicsProfile Level_9_1
+        ProjectReferences:
+            -   Id: 597f2543-faa6-428d-aefe-b6a32be6b176
+                Location: LudumDare32.Windows/LudumDare32.Windows.csproj
+                Type: Executable
+ExplicitFolders: []
+Bundles: []
+TemplateFolders: []

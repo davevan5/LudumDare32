@@ -1,0 +1,10 @@
+!EffectLibrary
+Id: 4e222028-8849-4f90-ba0e-d780cf0fb3dc
+BuildOrder: 1000
+Tags: []
+Permutations:
+    Keys:
+        Effect.Name: LudumDare32EffectMain
+        MaterialAsset.UseParameters: true
+        Mesh.UseParameters: true
+    Children: []
