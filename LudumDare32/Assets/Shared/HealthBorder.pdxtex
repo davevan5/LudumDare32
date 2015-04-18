@@ -1,10 +1,7 @@
 !Texture
-Id: 99b91648-ba8a-495b-904c-d2f578d5debb
+Id: f7e9ca35-f22d-4363-b712-149dec051ba7
 Tags: []
-Source: ../../../RawAssets/bar_outline.png
-Width: 200
-Height: 28
-IsSizeInPercentage: false
+Source: ../../../RawAssets/HealthBorder.png
 ColorKeyColor: {R: 255, G: 0, B: 255, A: 255}
 Format: TrueColor
 GenerateMipmaps: false

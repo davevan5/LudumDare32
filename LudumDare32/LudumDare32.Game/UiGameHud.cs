@@ -28,6 +28,12 @@ namespace LudumDare32
         {
             spriteFont = Asset.Load<SpriteFont>("ScoreFont");
 
+            healthBar = new UIGameBar(Services, hudCanvas, "Health");
+            healthBar.LoadContent(new Vector3(0.1f, 0.91f, 1f), new Vector3(0.005f, 0.012f, 0f));
+
+            staminaBar = new UIGameBar(Services, hudCanvas, "Stamina");
+            staminaBar.LoadContent(new Vector3(0.1f, 0.85f, 1f), new Vector3(0.006f, 0.004f, 0f));
+
             xpTextBlock = new TextBlock
             {
                 Font = spriteFont,
@@ -42,12 +48,6 @@ namespace LudumDare32
             };
             xp.SetCanvasRelativePosition(new Vector3(0.03f, 0.91f, 1f));
             hudCanvas.Children.Add(xp);
-
-            healthBar = new UIGameBar(Services, hudCanvas, "health");
-            healthBar.LoadContent(new Vector3(0.1f, 0.95f, 1f));
-
-            staminaBar = new UIGameBar(Services, hudCanvas, "stamina");
-            staminaBar.LoadContent(new Vector3(0.1f, 0.9f, 1f));
 
             UI.RootElement = hudCanvas;
         }

@@ -1,10 +1,7 @@
 !Texture
-Id: a0971c1e-8c43-4305-9b87-cc9d2f1b47f1
+Id: 9dccf44a-aadf-4a44-b201-5d6fa9616663
 Tags: []
-Source: ../../../RawAssets/health.png
-Width: 192
-Height: 21
-IsSizeInPercentage: false
+Source: ../../../RawAssets/StaminaBar.png
 ColorKeyColor: {R: 255, G: 0, B: 255, A: 255}
 Format: TrueColor
 GenerateMipmaps: false

@@ -39,18 +39,9 @@ namespace LudumDare32
             barFill.Width = barFillMaxWidth * percent;
         }
 
-        public void LoadContent(Vector3 barPosition)
+        public void LoadContent(Vector3 barPosition, Vector3 fillOffset)
         {
-            var barOutlineTexture = Asset.Load<Texture>("BarContainer");
-            barOutline = new ImageElement
-            {
-                Source = new UIImage(barOutlineTexture),
-                Width = barOutlineTexture.Width,
-                Height = barOutlineTexture.Height
-            };
-            barOutline.SetCanvasRelativePosition(barPosition);
-
-            var barFillTexture = Asset.Load<Texture>(barTextureName);
+            var barFillTexture = Asset.Load<Texture>(barTextureName + "Bar");
             barFill = new ImageElement
             {
                 Source = new UIImage(barFillTexture),
@@ -60,10 +51,18 @@ namespace LudumDare32
             };
 
             barFillMaxWidth = barFillTexture.Width;
-            barFill.SetCanvasRelativePosition(Vector3.Add(barPosition, new Vector3(0.003f, 0.004f, 0f)));
-
-            gameCanvas.Children.Add(barOutline);
+            barFill.SetCanvasRelativePosition(Vector3.Add(barPosition, fillOffset));
             gameCanvas.Children.Add(barFill);
+
+            var barOutlineTexture = Asset.Load<Texture>(barTextureName + "Border");
+            barOutline = new ImageElement
+            {
+                Source = new UIImage(barOutlineTexture),
+                Width = barOutlineTexture.Width,
+                Height = barOutlineTexture.Height,
+            };
+            barOutline.SetCanvasRelativePosition(barPosition);
+            gameCanvas.Children.Add(barOutline);
         }
     }
 }
