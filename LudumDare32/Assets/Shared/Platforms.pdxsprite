@@ -1,0 +1,13 @@
+!SpriteGroup
+Id: 5e625b9b-4c95-4a1f-a7a3-c805d621b86a
+Tags: []
+Images:
+    -   Source: ../../../RawAssets/simpleplatform.png
+        Name: New frame
+        TextureRegion:
+            X: 0
+            Y: 0
+            Width: 64
+            Height: 32
+        Center: {X: 0, Y: 0}
+ColorKeyColor: {R: 255, G: 0, B: 255, A: 255}

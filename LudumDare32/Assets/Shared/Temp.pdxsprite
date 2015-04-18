@@ -1,0 +1,13 @@
+!SpriteGroup
+Id: 76e31f90-2edb-4b9f-b381-346f9a6828a5
+Tags: []
+Images:
+    -   Source: ../../../RawAssets/temp.png
+        Name: New frame
+        TextureRegion:
+            X: 0
+            Y: 0
+            Width: 32
+            Height: 64
+        Center: {X: 0, Y: 0}
+ColorKeyColor: {R: 255, G: 0, B: 255, A: 255}
