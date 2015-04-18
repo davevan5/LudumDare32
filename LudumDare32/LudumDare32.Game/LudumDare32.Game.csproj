@@ -82,6 +82,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>LudumDare32EffectMain.pdxfx</DependentUpon>
     </Compile>
+    <Compile Include="UIGameBar.cs" />
+    <Compile Include="UiGameHud.cs" />
     <None Include="Effects\Permutations.pdxfxlib" />
     <None Include="Effects\LudumDare32EffectMain.pdxfx">
       <Generator>ParadoxShaderKeyGenerator</Generator>

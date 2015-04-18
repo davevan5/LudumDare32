@@ -1,8 +1,10 @@
 using System.Threading.Tasks;
+using SiliconStudio.Core.Diagnostics;
 using SiliconStudio.Core.Mathematics;
 using SiliconStudio.Paradox;
 using SiliconStudio.Paradox.Effects;
 using SiliconStudio.Paradox.Graphics;
+using SiliconStudio.Paradox.UI.Panels;
 using SiliconStudio.Paradox.EntityModel;
 using SiliconStudio.Core;
 using SiliconStudio.Paradox.Engine;
@@ -15,6 +17,7 @@ namespace LudumDare32
 {
     public class LudumDare32Game : Game
     {
+        private Canvas gameHud;
         private Entity cameraEntity;
         private Level level;
         private Player player;
@@ -22,7 +25,8 @@ namespace LudumDare32
         public LudumDare32Game()
         {
             // Target 9.1 profile by default
-            GraphicsDeviceManager.PreferredGraphicsProfile = new[] { GraphicsProfile.Level_9_3 };
+            GraphicsDeviceManager.PreferredGraphicsProfile = new[] {GraphicsProfile.Level_9_1};
+            ConsoleLogMode = ConsoleLogMode.Always;
         }
 
         protected override async Task LoadContent()
@@ -61,6 +65,10 @@ namespace LudumDare32
             // Set up the rendering pipeline
             CreatePipeline();
 
+            gameHud = new Canvas();
+            var healthBar = new UIGameBar(Services, gameHud);
+            healthBar.LoadContent();
+            UI.RootElement = gameHud;
             // Kick off our update loop
             Script.Add(UpdateLoop);
         }
@@ -80,7 +88,7 @@ namespace LudumDare32
             
             // Setup the default rendering pipeline
             RenderSystem.Pipeline.Renderers.Add(new CameraSetter(Services) { Camera = cameraEntity.Get<CameraComponent>() });
-            RenderSystem.Pipeline.Renderers.Add(new RenderTargetSetter(Services) { ClearColor = Color.CornflowerBlue });
+            RenderSystem.Pipeline.Renderers.Add(new RenderTargetSetter(Services) {ClearColor = Color.CornflowerBlue});
             RenderSystem.Pipeline.Renderers.Add(levelRenderer);
             RenderSystem.Pipeline.Renderers.Add(new SpriteRenderer(Services));
             RenderSystem.Pipeline.Renderers.Add(new UIRenderer(Services));
@@ -93,9 +101,6 @@ namespace LudumDare32
             {
                 // Wait next rendering frame
                 await Script.NextFrame();
-
-                // Add custom code to run every frame here (move entity...etc.)
-                // ...
                 player.Update((float)UpdateTime.Elapsed.TotalSeconds);
                  
                 var result = level.CheckCollision(player.GetCollider());
