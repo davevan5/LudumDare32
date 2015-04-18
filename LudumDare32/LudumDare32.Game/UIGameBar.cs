@@ -16,7 +16,7 @@ namespace LudumDare32
 
         private ImageElement barElement;
 
-        public UIGameBar(IServiceRegistry registry, Canvas gameCanvas, barText)
+        public UIGameBar(IServiceRegistry registry, Canvas gameCanvas, string barText)
             : base(registry)
         {
             this.gameCanvas = gameCanvas;

@@ -66,7 +66,7 @@ namespace LudumDare32
             CreatePipeline();
 
             gameHud = new Canvas();
-            var healthBar = new UIGameBar(Services, gameHud);
+            var healthBar = new UIGameBar(Services, gameHud, "health");
             healthBar.LoadContent();
             UI.RootElement = gameHud;
             // Kick off our update loop
