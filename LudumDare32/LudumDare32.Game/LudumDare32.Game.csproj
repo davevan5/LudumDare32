@@ -59,22 +59,13 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <DefineConstants>TRACE;SILICONSTUDIO_PLATFORM_WINDOWS;SILICONSTUDIO_PLATFORM_WINDOWS_DESKTOP</DefineConstants>
-    <SiliconStudioPlatform>Windows</SiliconStudioPlatform>
-    <SiliconStudioParadoxGraphicsApi>Direct3D11</SiliconStudioParadoxGraphicsApi>
-    <SiliconStudioBuildProfile>Windows</SiliconStudioBuildProfile>
-    <OutputPath>..\Bin\Windows-Direct3D11\AppStore\</OutputPath>
-    <IntermediateOutputPath>obj\Windows\AppStore\</IntermediateOutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AABBCollider.cs" />
+    <Compile Include="BoxCollider.cs" />
+    <Compile Include="Collider.cs" />
     <Compile Include="CollisionResult.cs" />
     <Compile Include="Effects\LudumDare32EffectMain.cs">
       <AutoGen>True</AutoGen>
@@ -84,6 +75,7 @@
     </Compile>
     <Compile Include="UIGameBar.cs" />
     <Compile Include="UiGameHud.cs" />
+    <Compile Include="Vector2Helpers.cs" />
     <None Include="Effects\Permutations.pdxfxlib" />
     <None Include="Effects\LudumDare32EffectMain.pdxfx">
       <Generator>ParadoxShaderKeyGenerator</Generator>

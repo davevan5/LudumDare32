@@ -1,129 +1,232 @@
 using SiliconStudio.Core.Mathematics;
 using SiliconStudio.Paradox.Graphics;
 using System.Collections.Generic;
+using System.Linq;
 using System;
+using SiliconStudio.Paradox.EntityModel;
+using System.Diagnostics;
 
 namespace LudumDare32
 {
+    class Tile
+    {
+        public Sprite Sprite { get; set; }
+        public TileExposedSide Exposed { get; set; }
+        public bool Collidable { get; set; }
+    }
+
+    [Flags]
+    enum TileExposedSide
+    {
+        None = 0,
+        Top = 1 << 0,
+        Left = 1 << 1,
+        Right = 1 << 2,
+        Bottom = 1 << 3
+    }
+
+    struct Position
+    {
+        public Position(int x, int y)
+            : this()
+        {
+            X = x;
+            Y = y;
+        }
+
+        public int X;
+        public int Y;
+    }
+
+
     class Level
     {
-        public List<LevelItem> Items { get; set; }
+        public readonly Tile[] tiles;
+        private readonly Size2 size;
 
-        public Level()
+        public Level(Size2 size)
         {
-            Items = new List<LevelItem>();
+            this.size = size;
+            tiles = new Tile[size.Width * size.Height];
+
         }
 
-        public void Add(LevelItem item)
+        private int GetTileIndex(int x, int y)
         {
-            Items.Add(item);
+            return (y * size.Width) + x;
         }
 
-        private float CalculateMinProjection(RectangleF collider, Vector2 axis)
+        public void SetTile(int x, int y, Tile tile)
         {
-            return
-                Math.Min(Vector2.Dot(collider.TopLeft, axis),
-                    Math.Min(Vector2.Dot(collider.TopRight, axis),
-                        Math.Min(Vector2.Dot(collider.BottomLeft, axis),
-                            Vector2.Dot(collider.BottomRight, axis))));
+            tiles[GetTileIndex(x, y)] = tile;
         }
 
-        private float CalculateMaxProjection(RectangleF collider, Vector2 axis)
+        public Position TileFromPixelCoordinate(Vector2 pixel)
         {
-            return
-                Math.Max(Vector2.Dot(collider.TopLeft, axis),
-                    Math.Max(Vector2.Dot(collider.TopRight, axis),
-                        Math.Max(Vector2.Dot(collider.BottomLeft, axis),
-                            Vector2.Dot(collider.BottomRight, axis))));
+            return new Position(
+                MathUtil.Clamp((int)(pixel.X / 32), 0, size.Width - 1),
+                MathUtil.Clamp((int)(pixel.Y / 32), 0, size.Height - 1));
         }
 
-        private bool CheckAxis(RectangleF a, RectangleF b, Vector2 axis, out float resolution)
+        public void BuildTileData()
+        {
+            for (int y = 0; y < size.Height; y++)
+                for (int x = 0; x < size.Width; x++)
+                {
+                    var tile = tiles[GetTileIndex(x, y)];
+                    if (tile == null)
+                        continue;
+
+                    TileExposedSide exposed = TileExposedSide.None;
+
+                    if (x == 0 || tiles[GetTileIndex(x - 1, y)] == null)
+                    {
+                        exposed |= TileExposedSide.Left;
+                    }
+
+                    if (x == size.Width - 1 || tiles[GetTileIndex(x + 1, y)] == null)
+                    {
+                        exposed |= TileExposedSide.Right;
+                    }
+
+                    if (y == 0 || tiles[GetTileIndex(x, y - 1)] == null)
+                    {
+                        exposed |= TileExposedSide.Top;
+                    }
+
+                    if (y == size.Height - 1 || tiles[GetTileIndex(x, y + 1)] == null)
+                    {
+                        exposed |= TileExposedSide.Bottom;
+                    }
+
+                    tile.Exposed = exposed;
+                }
+        }
+
+        private bool CheckAxis(Collider a, Collider b, Vector2 axis, out float resolution)
         {
             resolution = 0;
 
-            float aCenterProj = Vector2.Dot(a.Center, axis);
-            float bCenterProj = Vector2.Dot(b.Center, axis);
+            float aMin = a.MinProjection(axis);
+            float aMax = a.MaxProjection(axis);
+            float bMin = b.MinProjection(axis);
+            float bMax = b.MaxProjection(axis);
+            float aHalf = (aMax - aMin) * 0.5f;
+            float bHalf = (bMax - bMin) * 0.5f;
+            float aCenterProj = aMin + aHalf;
+            float bCenterProj = bMin + bHalf;
 
-            float aMin = CalculateMinProjection(a, axis);
-            float aMax = CalculateMaxProjection(a, axis);
-            float bMin = CalculateMinProjection(b, axis);
-            float bMax = CalculateMaxProjection(b, axis);
+            float distance = Math.Abs(bCenterProj - aCenterProj);
 
-            if (aCenterProj < bCenterProj)
+            if (distance - aHalf - bHalf >= -float.Epsilon)
             {
-                if (aMax <= bMin)
-                    return false;
-                if (aMin > bMax)
-                    return false;
-                resolution = bMin - aMax;
-                return true;
+                return false;
+            }
+
+            if (aCenterProj <= bCenterProj)
+            {
+                resolution = aMax - bMin;
             }
             else
             {
-                if (bMax <= aMin)
-                    return false;
-                if (bMin > aMax)
-                    return false;
-                resolution = aMin - bMax;
-                return true;
+                resolution = bMax - aMin;
             }
 
+            return true;
         }
 
-        public CollisionResult CheckCollision(RectangleF collider, bool assertValidResolution = true)
+        public void CheckCollision(Player player)
         {
-            bool collided = false;
-            Vector2 axisResult = Vector2.Zero;
-            float resolutionResult = float.PositiveInfinity;
+            var rect = player.GetCollider();
 
-            for (var i = 0; i < Items.Count; i++)
-            {
-                Vector2 thisAxisResult = Vector2.Zero;
-                float thisResolutionResult = float.PositiveInfinity;
+            Position topLeft = TileFromPixelCoordinate(rect.TopLeft);
+            Position bottomRight = TileFromPixelCoordinate(rect.BottomRight);
 
-                float resolution;
 
-                if (!CheckAxis(collider, Items[i].Collider, Vector2.UnitX, out resolution))
-                    continue;
 
-                if (Math.Abs(resolution) < Math.Abs(thisResolutionResult))
+            for (int y = topLeft.Y; y <= bottomRight.Y; y++)
+                for (int x = topLeft.X; x <= bottomRight.X; x++)
                 {
-                    thisResolutionResult = resolution;
-                    thisAxisResult = Vector2.UnitX;
+                    bool collided = false;
+                    float resolution = float.PositiveInfinity;
+                    Vector2 axis = Vector2.Zero;
+
+                    var tile = tiles[GetTileIndex(x,y)];
+                    if (tile == null)
+                        continue;
+
+                    var tileRect = new RectangleF(x * 32, y * 32, 32, 32);
+
+                    if (!rect.Intersects(tileRect))
+                        continue;
+
+                    // So we handle an individual tile
+                    if (tileRect.Center.Y <= rect.Center.Y && (tile.Exposed & TileExposedSide.Bottom) == TileExposedSide.Bottom)
+                    {
+                        // We are above the player, and we have a solid bottom
+                        float res = tileRect.Bottom - rect.Top;
+                        if (res > 0 && res < resolution)
+                        {
+                            collided = true;
+                            resolution = res;
+                            axis = Vector2.UnitY;
+                        }
+                    }
+
+                    if (tileRect.Center.Y > rect.Center.Y && (tile.Exposed & TileExposedSide.Top) == TileExposedSide.Top)
+                    {
+                        // We are above the player, and we have a solid bottom
+                        float res = rect.Bottom - tileRect.Top;
+                        if (res > 0 && res < resolution)
+                        {
+                            collided = true;
+                            resolution = res;
+                            axis = -Vector2.UnitY;
+                        }
+                    }
+
+                    if (tileRect.Center.X <= rect.Center.X && (tile.Exposed & TileExposedSide.Right) == TileExposedSide.Right)
+                    {
+                        // We are above the player, and we have a solid bottom
+                        float res = tileRect.Right - rect.Left;
+                        if (res > 0 && res < resolution)
+                        {
+                            collided = true;
+                            resolution = res;
+                            axis = Vector2.UnitX;
+                        }
+                    }
+
+                    if (tileRect.Center.X > rect.Center.X && (tile.Exposed & TileExposedSide.Left) == TileExposedSide.Left)
+                    {
+                        // We are above the player, and we have a solid bottom
+                        float res = rect.Right - tileRect.Left;
+                        if (res > 0 && res < resolution)
+                        {
+                            collided = true;
+                            resolution = res;
+                            axis = -Vector2.UnitX;
+                        }
+                    }
+
+                    if (collided && float.IsInfinity(resolution))
+                        Debugger.Break();
+
+                    if (collided)
+                        player.OnCollision(new CollisionResult(collided, axis * resolution));
                 }
-
-                if (!CheckAxis(collider, Items[i].Collider, Vector2.UnitY, out resolution))
-                    continue;
-
-                if (Math.Abs(resolution) < Math.Abs(thisResolutionResult))
-                {
-                    thisResolutionResult = resolution;
-                    thisAxisResult = Vector2.UnitY;
-                }
-
-                Vector2 resolutionVector = thisResolutionResult * thisAxisResult;
-
-                if (assertValidResolution && CheckCollision(new RectangleF(collider.X + resolutionVector.X, collider.Y + resolutionVector.Y, collider.Width, collider.Height), false).Collided)
-                    continue;
-
-                if (Math.Abs(thisResolutionResult) < Math.Abs(resolutionResult))
-                {
-                    resolutionResult = thisResolutionResult;
-                    axisResult = thisAxisResult;
-                }
-
-                collided = true;
-            }
-
-            return new CollisionResult(collided, axisResult * resolutionResult);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            for (var i = 0; i < Items.Count; i++)
-            {
-                Items[i].Sprite.Draw(spriteBatch, Items[i].Position);
-            }
+            for (var y = 0; y < size.Height; y++)
+                for (var x = 0; x < size.Width; x++)
+                {
+                    var tile = tiles[GetTileIndex(x, y)];
+                    if (tile == null)
+                        continue;
+                    tile.Sprite.Draw(spriteBatch, new Vector2(x * 32 + 16, y * 32 + 16));
+                }
         }
     }
 }

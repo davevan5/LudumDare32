@@ -1,0 +1,13 @@
+!SpriteGroup
+Id: 6ba757b8-1a72-4c54-a0dd-7ed61e1dbfcf
+Tags: []
+Images:
+    -   Source: ../../../RawAssets/TestTile.png
+        Name: New frame
+        TextureRegion:
+            X: 0
+            Y: 0
+            Width: 32
+            Height: 32
+        Center: {X: 0, Y: 0}
+ColorKeyColor: {R: 255, G: 0, B: 255, A: 255}
