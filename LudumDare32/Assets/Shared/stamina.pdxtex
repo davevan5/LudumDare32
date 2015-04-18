@@ -2,6 +2,9 @@
 Id: 45cc9f0e-21a0-4dcb-aa86-5a5921a5aae2
 Tags: []
 Source: ../../RawAssets/stamina.png
+Width: 194
+Height: 22
+IsSizeInPercentage: false
 ColorKeyColor: {R: 255, G: 0, B: 255, A: 255}
 Format: TrueColor
 GenerateMipmaps: false
