@@ -10,4 +10,28 @@ Images:
             Width: 32
             Height: 32
         Center: {X: 0, Y: 0}
+    -   Source: ../../../RawAssets/TestTile.png
+        Name: New frame (2)
+        TextureRegion:
+            X: 32
+            Y: 0
+            Width: 32
+            Height: 32
+        Center: {X: 0, Y: 0}
+    -   Source: ../../../RawAssets/TestTile.png
+        Name: New frame (3)
+        TextureRegion:
+            X: 0
+            Y: 32
+            Width: 32
+            Height: 32
+        Center: {X: 0, Y: 0}
+    -   Source: ../../../RawAssets/TestTile.png
+        Name: New frame (4)
+        TextureRegion:
+            X: 32
+            Y: 32
+            Width: 32
+            Height: 32
+        Center: {X: 0, Y: 0}
 ColorKeyColor: {R: 255, G: 0, B: 255, A: 255}

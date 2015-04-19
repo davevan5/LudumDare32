@@ -54,6 +54,9 @@ namespace LudumDare32
             // following JumpyJets example :P
             player = new Player(playerEntity, Input);
 
+            LevelReader reader = new LevelReader("/data/TestMap.json");
+            reader.Read();
+
             // Create our level
             var platforms = Asset.Load<SpriteGroup>("TileSetTest");
             level = new Level(new Size2(20, 11));

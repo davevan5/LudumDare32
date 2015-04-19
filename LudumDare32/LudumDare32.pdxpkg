@@ -10,7 +10,6 @@ Meta:
     Dependencies:
         -   Name: Paradox
             Version: 1.0.0-beta10
-LocalDependencies: []
 Profiles:
     -   Name: Shared
         Platform: Shared

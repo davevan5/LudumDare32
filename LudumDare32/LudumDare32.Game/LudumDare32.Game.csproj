@@ -60,9 +60,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .NET Framework is automatically included -->
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="AABBCollider.cs" />
     <Compile Include="BoxCollider.cs" />
     <Compile Include="Collider.cs" />
@@ -76,6 +73,10 @@
     <Compile Include="UIGameBar.cs" />
     <Compile Include="UiGameHud.cs" />
     <Compile Include="Vector2Helpers.cs" />
+    <None Include="..\..\RawAssets\TestMap.json">
+      <Link>data\TestMap.json</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Effects\Permutations.pdxfxlib" />
     <None Include="Effects\LudumDare32EffectMain.pdxfx">
       <Generator>ParadoxShaderKeyGenerator</Generator>
@@ -86,6 +87,12 @@
     <Compile Include="LudumDare32Game.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\packages\Newtonsoft.Json.6.0.8\lib\portable-net45+wp80+win8+wpa81+aspnetcore50\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="$(SiliconStudioPackageProps)" Condition="Exists('$(SiliconStudioPackageProps)')" />

@@ -5,9 +5,54 @@ using System.Linq;
 using System;
 using SiliconStudio.Paradox.EntityModel;
 using System.Diagnostics;
-
+using System.IO;
+using SiliconStudio.Core.IO;
+using Newtonsoft.Json.Linq;
 namespace LudumDare32
 {
+    class TileSet
+    {
+        public int FirstId { get; set; }
+        public string AssetName { get; set; }
+        public int TileCount { get; set; }
+    }
+
+    class LevelData
+    {
+        public Size2 Size { get; set; }
+        public List<TileSet> TileSet { get; set; }
+        public int[] Data { get; set; }
+    }
+
+    class LevelReader
+    {
+        dynamic data;
+
+        public LevelReader(string path)
+        {
+            using (var s = new StreamReader(VirtualFileSystem.OpenStream(path, VirtualFileMode.Open, VirtualFileAccess.Read)))
+            {
+                data = JObject.Parse(s.ReadToEnd());
+            }
+        }
+
+        public LevelData Read()
+        {
+            var result = new LevelData();
+            result.Size = new Size2((int)data.width, (int)data.height);
+
+            var tileData = new int[result.Size.Width * result.Size.Height];
+            for (var i = 0; i < tileData.Length; i++)
+            {
+                tileData[i] = (int)data.layers[0].data[i];
+            }
+            result.Data = tileData;
+                
+
+            return result;
+        }
+    }
+
     class Tile
     {
         public Sprite Sprite { get; set; }
