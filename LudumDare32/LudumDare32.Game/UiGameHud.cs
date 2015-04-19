@@ -22,6 +22,7 @@ namespace LudumDare32
             : base(registry)
         {
             hudCanvas = new Canvas();
+            UI.RootElement = hudCanvas;
         }
 
         public void LoadContent()
@@ -29,11 +30,16 @@ namespace LudumDare32
             spriteFont = Asset.Load<SpriteFont>("ScoreFont");
 
             healthBar = new UIGameBar(Services, hudCanvas, "Health");
-            healthBar.LoadContent(new Vector3(0.1f, 0.91f, 1f), new Vector3(0.005f, 0.012f, 0f));
+            healthBar.LoadContent(new Vector3(0.07f, 0.91f, 1f), new Vector3(0.005f, 0.012f, 0f));
 
             staminaBar = new UIGameBar(Services, hudCanvas, "Stamina");
-            staminaBar.LoadContent(new Vector3(0.1f, 0.85f, 1f), new Vector3(0.006f, 0.004f, 0f));
+            staminaBar.LoadContent(new Vector3(0.07f, 0.85f, 1f), new Vector3(0.006f, 0.004f, 0f));
 
+            CreateXpCountUI();
+        }
+
+        private void CreateXpCountUI()
+        {
             xpTextBlock = new TextBlock
             {
                 Font = spriteFont,
@@ -46,20 +52,18 @@ namespace LudumDare32
             {
                 Content = xpTextBlock
             };
-            xp.SetCanvasRelativePosition(new Vector3(0.03f, 0.91f, 1f));
+            xp.SetCanvasRelativePosition(new Vector3(0.015f, 0.88f, 1f));
             hudCanvas.Children.Add(xp);
-
-            UI.RootElement = hudCanvas;
         }
 
-        private void SetCurrentXP(int xp)
+        private void SetCurrentXp(int xp)
         {
             xpTextBlock.Text = xp.ToString();
         }
 
         public void Update(float time)
         {
-            SetCurrentXP((int)Math.Floor(time));
+            SetCurrentXp((int)Math.Floor(time));
             staminaBar.SetPercentFill(1f - (time / 10));
         }
     }
