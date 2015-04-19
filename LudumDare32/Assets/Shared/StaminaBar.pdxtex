@@ -1,10 +1,7 @@
 !Texture
-Id: 99b91648-ba8a-495b-904c-d2f578d5debb
+Id: 9dccf44a-aadf-4a44-b201-5d6fa9616663
 Tags: []
-Source: ../../RawAssets/bar_outline.png
-Width: 200
-Height: 28
-IsSizeInPercentage: false
+Source: ../../../RawAssets/StaminaBar.png
 ColorKeyColor: {R: 255, G: 0, B: 255, A: 255}
 Format: TrueColor
 GenerateMipmaps: false

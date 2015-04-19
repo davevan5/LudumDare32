@@ -1,0 +1,18 @@
+!SpriteFont
+Id: 132074ac-f172-4578-9c39-7a47a4d538aa
+Tags: []
+Source: ../../../RawAssets/DancingScript-Bold.ttf
+FontName: Arial
+Size: 32
+Style: Regular
+IsDynamic: false
+DefaultCharacter: ' '
+CharacterSet: 0123456789
+CharacterRegions:
+    -   Start: ' '
+        End: "\x7F"
+AntiAlias: Grayscale
+NoPremultiply: false
+Spacing: 0
+LineSpacing: 0
+UseKerning: false

@@ -16,6 +16,8 @@ namespace LudumDare32
 
         private ImageElement barFill;
 
+        private float barFillMaxWidth;
+
         private readonly string barTextureName;
 
         public UIGameBar(IServiceRegistry registry, Canvas gameCanvas, string barTextureName)
@@ -25,28 +27,42 @@ namespace LudumDare32
             this.barTextureName = barTextureName;
         }
 
-        public void LoadContent()
+        /// <summary>
+        /// Set the percentage fill of this bar, value between 0-1.0f
+        /// </summary>
+        /// <param name="percent"></param>
+        public void SetPercentFill(float percent)
         {
-            var barOutlineTexture = Asset.Load<Texture>("bar_outline");
+            if (percent < 0 || percent > 1)
+                return;
+
+            barFill.Width = barFillMaxWidth * percent;
+        }
+
+        public void LoadContent(Vector3 barPosition, Vector3 fillOffset)
+        {
+            var barFillTexture = Asset.Load<Texture>(barTextureName + "Bar");
+            barFill = new ImageElement
+            {
+                Source = new UIImage(barFillTexture),
+                StretchType = StretchType.Fill,
+                Width = barFillTexture.Width,
+                Height = barFillTexture.Height
+            };
+
+            barFillMaxWidth = barFillTexture.Width;
+            barFill.SetCanvasRelativePosition(Vector3.Add(barPosition, fillOffset));
+            gameCanvas.Children.Add(barFill);
+
+            var barOutlineTexture = Asset.Load<Texture>(barTextureName + "Border");
             barOutline = new ImageElement
             {
                 Source = new UIImage(barOutlineTexture),
                 Width = barOutlineTexture.Width,
-                Height = barOutlineTexture.Height
+                Height = barOutlineTexture.Height,
             };
-            barOutline.SetCanvasRelativePosition(new Vector3(0.1f, 0.9f, 1f));
-
-            var barFillTexture = Asset.Load<Texture>(barTextureName);
-            barFill = new ImageElement
-            {
-                Source = new UIImage(barFillTexture),
-                Width = barFillTexture.Width,
-                Height = barFillTexture.Height
-            };
-            barFill.SetCanvasRelativePosition(new Vector3(0.1f, 0.9f, 1f));
-
+            barOutline.SetCanvasRelativePosition(barPosition);
             gameCanvas.Children.Add(barOutline);
-            gameCanvas.Children.Add(barFill);
         }
     }
 }
